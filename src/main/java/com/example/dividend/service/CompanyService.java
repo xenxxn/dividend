@@ -10,6 +10,7 @@ import com.example.dividend.scraper.Scraper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -58,6 +59,17 @@ public class CompanyService {
 
         return company;
     }
+
+    public List<String> getCompanyNamesByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0, 10);
+        Page<CompanyEntity> companyEntityList =
+                this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+
+        return companyEntityList.stream()
+                .map(e -> e.getName())
+                .collect(Collectors.toList());
+    }
+
 
     public void addAutocompleteKeyword(String keyword) {
         this.trie.put(keyword, null);
