@@ -54,10 +54,12 @@ public class YahooFinanceScraper implements Scraper{
                     throw new RuntimeException("Unexpected Month enum value : " + splits[0]);
                 }
 
-                dividendList.add(Dividend.builder()
-                        .date(LocalDateTime.of(year, month, day, 0, 0))
-                        .dividend(dividend)
-                        .build());
+                dividendList.add(
+                        new Dividend(
+                                LocalDateTime.of(year, month, day, 0, 0),
+                                dividend
+                        )
+                );
             }
 
             scrapResult.setDividendEntities(dividendList);
@@ -76,11 +78,7 @@ public class YahooFinanceScraper implements Scraper{
             Document document = Jsoup.connect(url).get();
             Element titleElement = document.getElementsByTag("h1").get(0);
             String title = titleElement.text().split(" - ")[1].trim();
-
-            return Company.builder()
-                    .ticker(ticker)
-                    .name(title)
-                    .build();
+            return new Company(ticker, title);
         } catch (IOException e) {
             e.printStackTrace();
         }
