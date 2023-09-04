@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class MemberEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +26,10 @@ public class MemberEntity implements UserDetails {
     private String username;
 
     private String password;
-
-    @ElementCollection
+    //아래 어노테이션이 없으면 컴파일 자체가 안됨.
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> roles;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
